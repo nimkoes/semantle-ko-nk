@@ -11,7 +11,7 @@ public class Semantle {
     private final int delay;
     private static final String URL = "https://semantle-ko.newsjel.ly/guess/";
     private static final String CORRECT = "정답!";
-
+    private static final String NOT_FOUND = "찾지 못했습니다";
 
     public Semantle(int seq, int delay) {
         this.seq = seq;
@@ -21,7 +21,7 @@ public class Semantle {
     public String process(List<String> words) throws IOException, InterruptedException {
         String url = getAccessUrl();
         QueryService queryService = new QueryService();
-        String resp = "찾지 못했습니다";
+        String resp = NOT_FOUND;
 
         int callCount = 0, totalCount = words.size();
         for (String word : words) {

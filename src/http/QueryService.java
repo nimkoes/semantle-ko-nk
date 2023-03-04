@@ -2,6 +2,7 @@ package http;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.jsoup.internal.StringUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +12,6 @@ import java.net.URL;
 
 public class QueryService {
     private static final String KEY_RANK = "rank";
-    private static final String ERROR = "error";
 
     public String doRequest(String url) throws IOException {
 
@@ -26,17 +26,15 @@ public class QueryService {
     }
 
     private static String getRankString(String response) {
-        if (ERROR.equals(response)) return ERROR;
+        if (StringUtil.isBlank(response)) return "";
         JsonObject jsonObj = JsonParser.parseString(response).getAsJsonObject();
         return jsonObj.get(KEY_RANK).getAsString();
     }
 
     private static String getResponse(HttpURLConnection conn) throws IOException {
-        StringBuilder response = new StringBuilder();
-        if (conn.getResponseCode() != 200) {
-            return ERROR;
-        }
+        if (conn.getResponseCode() != 200) return "";
 
+        StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"))) {
             String inputLine;
             while ((inputLine = in.readLine()) != null) response.append(inputLine);
