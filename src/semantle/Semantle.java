@@ -7,42 +7,40 @@ import java.io.IOException;
 import java.util.List;
 
 public class Semantle {
-    private final int seq;
-    private final int delay;
+    private final int SEQ;
+    private final int DELAY;
+    private final int PRINT_PER_TRY_COUNT;
+
     private static final String URL = "https://semantle-ko.newsjel.ly/guess/";
     private static final String CORRECT = "정답!";
     private static final String NOT_FOUND = "찾지 못했습니다";
 
-    public Semantle(int seq, int delay) {
-        this.seq = seq;
-        this.delay = delay;
+    public Semantle(int SEQ, int DELAY, int PRINT_PER_TRY_COUNT) {
+        this.SEQ = SEQ;
+        this.DELAY = DELAY;
+        this.PRINT_PER_TRY_COUNT = PRINT_PER_TRY_COUNT;
     }
 
     public String process(List<String> words) throws IOException, InterruptedException {
-        String url = getAccessUrl();
         QueryService queryService = new QueryService();
-        String resp = NOT_FOUND;
 
+        String url = getAccessUrl();
         int callCount = 0, totalCount = words.size();
         for (String word : words) {
-            // 천천히 요청하도록...
-            Thread.sleep(delay);
-            ++callCount;
 
+            // 천천히 요청하도록...
+            Thread.sleep(DELAY);
             String result = queryService.doRequest(url + MyUtil.getUTF8EncodeString(word));
             String decodedString = MyUtil.getUTF8DecodeString(result);
 
-            if (callCount % 100 == 0) System.out.println(callCount++ + " / " + totalCount);
-            if (CORRECT.equals(decodedString)) {
-                resp = word;
-                break;
-            }
+            if (++callCount % PRINT_PER_TRY_COUNT == 0) System.out.println(callCount + " / " + totalCount);
+            if (CORRECT.equals(decodedString)) return word;
         }
 
-        return resp;
+        return NOT_FOUND;
     }
 
     private String getAccessUrl() {
-        return this.URL + this.seq + "/";
+        return this.URL + this.SEQ + "/";
     }
 }
