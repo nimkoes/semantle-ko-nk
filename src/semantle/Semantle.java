@@ -18,27 +18,28 @@ public class Semantle {
         this.delay = delay;
     }
 
-    public void process(List<String> words) throws IOException, InterruptedException {
+    public String process(List<String> words) throws IOException, InterruptedException {
         String url = getAccessUrl();
         QueryService queryService = new QueryService();
+        String resp = "찾지 못했습니다";
 
         int callCount = 0, totalCount = words.size();
         for (String word : words) {
             // 천천히 요청하도록...
             Thread.sleep(delay);
+            ++callCount;
+
             String result = queryService.doRequest(url + MyUtil.getUTF8EncodeString(word));
             String decodedString = MyUtil.getUTF8DecodeString(result);
 
-            ++callCount;
-            if (callCount % 100 == 0) {
-                System.out.println(callCount++ + " / " + totalCount);
-            }
-
+            if (callCount % 100 == 0) System.out.println(callCount++ + " / " + totalCount);
             if (CORRECT.equals(decodedString)) {
-                System.out.println(callCount + "번째 단어 [" + word + "] 가 정답");
+                resp = word;
                 break;
             }
         }
+
+        return resp;
     }
 
     private String getAccessUrl() {
