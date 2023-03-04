@@ -13,7 +13,7 @@ public class WordExtractor {
     private static final String URL = "https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Korean_5800";
     private static final String CLASS_NAME = "Kore";
 
-    public List<String> extract() throws IOException {
+    public static List<String> extract() throws IOException {
         List<String> words = new ArrayList<>();
 
         Document doc = Jsoup.connect(URL).get();
