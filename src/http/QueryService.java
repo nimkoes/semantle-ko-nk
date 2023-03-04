@@ -12,8 +12,9 @@ import java.net.URL;
 
 public class QueryService {
     private static final String KEY_RANK = "rank";
+    private static final int HTTP_RESPONSE_OK = 200;
 
-    public String doRequest(String url) throws IOException {
+    public static String doRequest(String url) throws IOException {
 
         // HTTP 연결 설정
         HttpURLConnection conn = getConnection(url);
@@ -32,7 +33,7 @@ public class QueryService {
     }
 
     private static String getResponse(HttpURLConnection conn) throws IOException {
-        if (conn.getResponseCode() != 200) return "";
+        if (HTTP_RESPONSE_OK != conn.getResponseCode()) return "";
 
         StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"))) {
@@ -49,5 +50,4 @@ public class QueryService {
         conn.setRequestMethod("GET");
         return conn;
     }
-
 }

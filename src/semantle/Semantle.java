@@ -4,6 +4,7 @@ import http.QueryService;
 import util.MyUtil;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class Semantle {
@@ -22,25 +23,21 @@ public class Semantle {
     }
 
     public String process(List<String> words) throws IOException, InterruptedException {
-        QueryService queryService = new QueryService();
-
-        String url = getAccessUrl();
         int callCount = 0, totalCount = words.size();
         for (String word : words) {
-
-            // 천천히 요청하도록...
             Thread.sleep(DELAY);
-            String result = queryService.doRequest(url + MyUtil.getUTF8EncodeString(word));
+            if (++callCount % PRINT_PER_TRY_COUNT == 0) System.out.println(callCount + " / " + totalCount);
+
+            String result = QueryService.doRequest(getAccessUrl(word));
             String decodedString = MyUtil.getUTF8DecodeString(result);
 
-            if (++callCount % PRINT_PER_TRY_COUNT == 0) System.out.println(callCount + " / " + totalCount);
             if (CORRECT.equals(decodedString)) return word;
         }
 
         return NOT_FOUND;
     }
 
-    private String getAccessUrl() {
-        return this.URL + this.SEQ + "/";
+    private String getAccessUrl(String word) throws UnsupportedEncodingException {
+        return this.URL + this.SEQ + "/" + MyUtil.getUTF8EncodeString(word);
     }
 }
