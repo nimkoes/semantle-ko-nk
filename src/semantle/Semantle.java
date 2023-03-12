@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class Semantle {
-    private final int SEQ;
+    private final long SEQ;
     private final int DELAY;
     private final int PRINT_PER_TRY_COUNT;
 
@@ -16,7 +16,7 @@ public class Semantle {
     private static final String CORRECT = "정답!";
     private static final String NOT_FOUND = "찾지 못했습니다";
 
-    public Semantle(int SEQ, int DELAY, int PRINT_PER_TRY_COUNT) {
+    public Semantle(long SEQ, int DELAY, int PRINT_PER_TRY_COUNT) {
         this.SEQ = SEQ;
         this.DELAY = DELAY;
         this.PRINT_PER_TRY_COUNT = PRINT_PER_TRY_COUNT;
